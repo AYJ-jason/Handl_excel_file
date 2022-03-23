@@ -151,6 +151,18 @@ class ExcelAction:
         else:
             return False
 
+    def checkSPL2(self, SPL2SP, list):
+        if list[SPL2SP + 5][0] == '\xa0++':
+             return True
+        else:
+             return False
+
+    def checkSPL3(self, SPL3SP, list):
+        if list[SPL3SP + 6][0] == '\xa0\xa0+++':
+             return True
+        else:
+             return False
+
     def  writeSPL1val(self, sp_SPL1, list, writeFilename, writeFilesheet):
         SP1CodeRow = sp_SPL1 + 4
         SP1CodeCol = 4
@@ -160,6 +172,59 @@ class ExcelAction:
         ea.writePartInfo(writeFilename, writeFilesheet, sp_SPL1+1, 2, list[SP1CodeRow][SP1CodeCol])
         # 写母件编码
         ea.writePartInfo(writeFilename, writeFilesheet, sp_SPL1+1, 3, list[SP1NameRow][SP1NameCol])
+
+    def  writeSPL2val(self, sp_SPL2, list, writeFilename, writeFilesheet):
+        SP1CodeRow = sp_SPL2 + 5
+        SP1CodeCol = 4
+        SP1NameRow = sp_SPL2 + 5
+        SP1NameCol = 5
+        # 写子件编码
+        ea.writePartInfo(writeFilename, writeFilesheet, sp_SPL2+1, 4, list[SP1CodeRow][SP1CodeCol])
+        # 写母件编码
+        ea.writePartInfo(writeFilename, writeFilesheet, sp_SPL2+1, 5, list[SP1NameRow][SP1NameCol])
+
+    def  writeSPL3val(self, sp_SPL3, list, writeFilename, writeFilesheet):
+        SP1CodeRow = sp_SPL3 + 6
+        SP1CodeCol = 4
+        SP1NameRow = sp_SPL3 + 6
+        SP1NameCol = 5
+        # 写子件编码
+        ea.writePartInfo(writeFilename, writeFilesheet, sp_SPL3+1, 6, list[SP1CodeRow][SP1CodeCol])
+        # 写母件编码
+        ea.writePartInfo(writeFilename, writeFilesheet, sp_SPL3+1, 7, list[SP1NameRow][SP1NameCol])
+
+    # 重写母件信息
+    def reWriteMPval(self, sp_MP, rwMPfilename, CODE, NAME):
+        ea.WriteMPCodeval(rwMPfilename, sp_MP+1, 0, CODE);
+        ea.WriteMPNameval(rwMPfilename, sp_MP+1, 1, NAME);
+
+    # 重写1级子件件信息
+    def reWriteSPL1val(self, rewriteFilename, rewriteFilesheet, sp_SPL1_TEMP, list):
+        # 写子件编码
+        ea.writePartInfo(rewriteFilename, rewriteFilesheet, sp_SPL1_TEMP + 1, 2, list[4][4])
+        # 写母件编码
+        ea.writePartInfo(rewriteFilename, rewriteFilesheet, sp_SPL1_TEMP + 1, 3, list[4][5])
+
+    # 重写2级子件件信息
+    def reWriteSPL2val(self, rewriteFilename, rewriteFilesheet, sp_SPL2_TEMP, list):
+        # 写子件编码
+        ea.writePartInfo(rewriteFilename, rewriteFilesheet, sp_SPL2_TEMP + 1, 4, list[5][4])
+        # 写母件编码
+        ea.writePartInfo(rewriteFilename, rewriteFilesheet, sp_SPL2_TEMP + 1, 5, list[5][5])
+
+    # 重写3级子件件信息
+    def reWriteSPL3val(self, rewriteFilename, rewriteFilesheet, sp_SPL3_TEMP, list):
+        # 写子件编码
+        ea.writePartInfo(rewriteFilename, rewriteFilesheet, sp_SPL3_TEMP + 1, 6, list[6][4])
+        # 写母件编码
+        ea.writePartInfo(rewriteFilename, rewriteFilesheet, sp_SPL3_TEMP + 1, 7, list[6][5])
+
+    # 重写4级子件件信息
+    def reWriteSPL4val(self, rewriteFilename, rewriteFilesheet, sp_SPL4_TEMP, list):
+        # 写子件编码
+        ea.writePartInfo(rewriteFilename, rewriteFilesheet, sp_SPL4_TEMP + 1, 8, list[7][4])
+        # 写母件编码
+        ea.writePartInfo(rewriteFilename, rewriteFilesheet, sp_SPL4_TEMP + 1, 9, list[7][5])
 
 if __name__ == '__main__':
 
@@ -219,11 +284,34 @@ if __name__ == '__main__':
 
     # 处理2级子件
     while (True):
-        break;
+        if ea.checkSPL2(sp_SPL2, list) == True:
+            # 执行写2级子件信息
+            ea.writeSPL2val(sp_SPL2, list, gwrietFilename, gsheetname)
+            if sp_SPL2 != 0:
+                ea.reWriteSPL1val(gwrietFilename, gsheetname, sp_SPL2, list)
+
+            # 3级子件位置指针++
+            sp_SPL2 += 1
+        else:
+            sp_SPL2 = 0
+            break;
 
     # 处理3级子件
     while (True):
-        break;
+        if ea.checkSPL3(sp_SPL3, list) == True:
+            # 执行写3级子件信息
+            ea.writeSPL3val(sp_SPL3, list, gwrietFilename, gsheetname)
+            if sp_SPL3 != 0:
+                # 写母件 写1级 写2级
+                ea.reWriteMPval(sp_SPL3, gwrietFilename, gMPCode, gMPName)
+                ea.reWriteSPL1val(gwrietFilename, gsheetname, sp_SPL3, list)
+                ea.reWriteSPL2val(gwrietFilename, gsheetname, sp_SPL3, list)
+
+            # 3级子件位置指针++
+            sp_SPL3 += 1
+        else:
+            sp_SPL3 = 0
+            break;
 
     # 处理4级子件
     while (True):
