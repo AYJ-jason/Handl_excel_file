@@ -197,7 +197,7 @@ if __name__ == '__main__':
         list = ea.read_excel(gsourceFilename, gsheetname)
 
 
-    # 处理母件
+    # 处理母件 2022
     handStatus, gMPCode, gMPName = ea.handleMP(list)
     # 写母件
     if  handStatus == True:
