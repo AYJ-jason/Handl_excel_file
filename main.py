@@ -211,9 +211,9 @@ class ExcelAction:
         SP4NameRow = sp_readSPL4
         SP4NameCol = 5
         # 写子件编码
-        ea.writePartInfo(writeFilename, writeFilesheet, sp_writeSPL4, 6, list[SP4CodeRow][SP4CodeCol])
+        ea.writePartInfo(writeFilename, writeFilesheet, sp_writeSPL4, 8, list[SP4CodeRow][SP4CodeCol])
         # 写母件编码
-        ea.writePartInfo(writeFilename, writeFilesheet, sp_writeSPL4, 7, list[SP4NameRow][SP4NameCol])
+        ea.writePartInfo(writeFilename, writeFilesheet, sp_writeSPL4, 9, list[SP4NameRow][SP4NameCol])
 
     def writeSPL5val(self, sp_readSPL5, sp_writeSPL5, list, writeFilename, writeFilesheet):
         SP5CodeRow = sp_readSPL5
@@ -221,9 +221,9 @@ class ExcelAction:
         SP5NameRow = sp_readSPL5
         SP5NameCol = 5
         # 写子件编码
-        ea.writePartInfo(writeFilename, writeFilesheet, sp_writeSPL5, 6, list[SP5CodeRow][SP5CodeCol])
+        ea.writePartInfo(writeFilename, writeFilesheet, sp_writeSPL5, 10, list[SP5CodeRow][SP5CodeCol])
         # 写母件编码
-        ea.writePartInfo(writeFilename, writeFilesheet, sp_writeSPL5, 7, list[SP5NameRow][SP5NameCol])
+        ea.writePartInfo(writeFilename, writeFilesheet, sp_writeSPL5, 11, list[SP5NameRow][SP5NameCol])
 
     # 重写母件信息
     def reWriteMPval(self, sp_writeMP, rwMPfilename, CODE, NAME):
@@ -333,7 +333,7 @@ if __name__ == '__main__':
 
         elif (ea.checkSPL2(indexReadSubPart, list) == True):
             # 读取到了2级子件标识符
-            if (Readedlevel == SPL2):
+            if (Readedlevel >= SPL2):
                 indexWriteSubPart += 1
                 ea.reWriteMPval(indexWriteSubPart, gwrietFilename, gMPCode, gMPName)
                 ea.reWriteSPL1val(gwrietFilename, gsheetname, indexWriteSubPart, list)
@@ -344,7 +344,7 @@ if __name__ == '__main__':
 
         elif (ea.checkSPL3(indexReadSubPart, list) == True):
             # 读取到了3级子件标识符
-            if (Readedlevel == SPL3):
+            if (Readedlevel >= SPL3):
                 indexWriteSubPart += 1
                 ea.reWriteMPval(indexWriteSubPart, gwrietFilename, gMPCode, gMPName)
                 ea.reWriteSPL1val(gwrietFilename, gsheetname, indexWriteSubPart, list)
@@ -356,7 +356,7 @@ if __name__ == '__main__':
 
         elif (ea.checkSPL4(indexReadSubPart, list) == True):
             # 读取到了4级子件标识符
-            if (Readedlevel == SPL4):
+            if (Readedlevel >= SPL4):
                 indexWriteSubPart += 1
                 ea.reWriteMPval(indexWriteSubPart, gwrietFilename, gMPCode, gMPName)
                 ea.reWriteSPL1val(gwrietFilename, gsheetname, indexWriteSubPart, list)
