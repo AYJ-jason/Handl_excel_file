@@ -44,7 +44,7 @@ class ExcelAction:
         sheet = workbook.sheet_by_name(sheetname)  # 获得sheet
         rows = sheet.nrows  # 文件总行数
         list = []
-        print (u'-------文件内容是-------')
+        print (u'-------文件内容是feature分支的代码-------')
         for i in range(0, rows):
             line = sheet.row_values(i)  # 获得一行的值，返回列表
             list.append(line)
